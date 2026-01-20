@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Example: Demo agent
+  demo-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SOURCE_TYPE=postgres
+      - POSTGRES_DSN=postgresql://agent_admin:agent_admin_pw_dev_only@agent-postgres:5432/agent_control_plane
+      - AGENT_NAME=demo-agent
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - agent-postgres
+    networks:
+      - agent-network
+    restart: unless-stopped
+
+  # Example: Supervisor agent
+  supervisor-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SOURCE_TYPE=postgres
+      - POSTGRES_DSN=postgresql://agent_admin:agent_admin_pw_dev_only@agent-postgres:5432/agent_control_plane
+      - AGENT_NAME=supervisor-agent
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - agent-postgres
+      - demo-agent
+    networks:
+      - agent-network
+    restart: unless-stopped
+
+  # PostgreSQL control plane (already exists in your setup)
+  agent-postgres:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=agent_admin
+      - POSTGRES_PASSWORD=agent_admin_pw_dev_only
+      - POSTGRES_DB=agent_control_plane
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - agent-network
+    restart: unless-stopped
+
+networks:
+  agent-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

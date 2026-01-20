@@ -1,0 +1,23 @@
+{
+    "name": "my-research-agent",
+    "model": {
+      "name": "o4-mini-2025-04-16",
+      "temperature": 1.0
+    },
+    "prompt": "You are a helpful AI assistant with access to various tools. Use the available tools to help answer questions and complete tasks. Be thorough in your responses and cite sources when using external tools.",
+    "middleware": [
+      {
+        "type": "summarization",
+        "enabled": true,
+        "model": "gpt-4o-mini",
+        "trigger": {
+          "type": "tokens",
+          "value": 200
+        },
+        "keep": {
+          "type": "messages",
+          "value": 1
+        }
+      }
+    ]
+  }

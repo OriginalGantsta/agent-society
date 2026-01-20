@@ -1,0 +1,23 @@
+{
+    "sequential-thinking": {
+        "command": "cmd",
+        "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+        ],
+        "transport": "stdio"
+    },
+    "memory": {
+        "command": "cmd",
+        "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory"
+        ],
+        "transport": "stdio"
+    }
+}
+
